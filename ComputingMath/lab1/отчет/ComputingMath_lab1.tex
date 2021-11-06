@@ -1,0 +1,129 @@
+\documentclass{llncs}
+\usepackage{cmap}
+\usepackage[T2A,T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[pdftex]{graphicx}
+\usepackage{comment}
+\usepackage{cite}
+\usepackage{setspace}
+\usepackage{authblk}
+\usepackage{calc}
+
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{fancyref}
+\usepackage{amssymb}
+\usepackage{verbatim}
+\usepackage{pdfpages}
+\usepackage{subcaption}
+\renewcommand\thesubfigure{\asbuk{subfigure}}
+\captionsetup{compatibility=false}
+\captionsetup[figure]{labelfont=bf}
+\captionsetup[subfigure]{labelfont=normalfont}
+\usetikzlibrary{arrows}
+\usetikzlibrary{patterns}
+
+\usepackage{graphicx}
+\graphicspath{{images/},{plots/}}
+\newcommand*{\hm}[1]{#1\nobreak\discretionary{}
+{\hbox{$\mathsurround=0pt #1$}}{}}
+
+\title{Отчёт по лаб. работе № 1}
+\author{
+Парошин Владислав
+}
+\begin{document}
+\maketitle
+
+\section{ Задача 1}
+
+	Выпишем систему уравнений
+
+\begin{align*}
+-u_7 -u_{11} + 4*u_6 = h^2 \\
+-u_6 -u_{12} -u_{16} + 4*u_{11} = h^2 \\
+-u_{11} -u_{17} + 4*u_{16} = h^2 \\
+-u_6 -u_8 -u_{12} + 4*u_7 = h^2 \\
+-u_{11} -u_7 -u_{13} -u_{17} + 4*u_{12} = h^2 \\
+-u_{16} -u_{12} -u_{18} + 4*u_{17} = h^2 \\
+-u_7 -u_{13} + 4*u_8 = h^2 \\
+-u_{12} -u_8 -u_{18} + 4*u_{13} = h^2 \\
+-u_{17} -u_{13} + 4*u_{18} = h^2
+\end{align*}
+
+В матричном виде:
+
+\begin{figure}[]
+	\centering
+	\includegraphics[scale=0.3]{matrix_text.png}
+	%\caption{\label{fig:diagram} }
+\end{figure}
+
+
+Визуализация:
+
+
+\begin{figure}[]
+	\centering
+	\includegraphics[width=\textwidth]{matrix.png}
+	%\caption{\label{fig:diagram} }
+\end{figure}
+
+и решение системы
+
+\[
+  u = 
+  \begin{pmatrix}
+    0.04296875 \\
+    0.0546875  \\
+    0.04296875 \\
+    0.0546875  \\
+    0.0703125  \\
+    0.0546875  \\
+    0.04296875 \\
+    0.0546875  \\
+    0.04296875
+  \end{pmatrix}
+\]
+
+\section{ Задача 2}
+	
+	\begin{figure}[]
+	\centering
+	\includegraphics[width=\textwidth]{matrix_big.png}
+	\caption{ Визуализируем построенную матрицу}
+\end{figure}
+	
+	
+	\begin{figure}[]
+	\centering
+	\includegraphics[width=\textwidth]{solution.png}
+	\caption{Визуализируем решение}
+\end{figure}
+
+\newpage
+Теперь посмотрим на сходимость разных методов
+\begin{figure}[]
+	\centering
+	\includegraphics[width=\textwidth]{zeidel.png}
+	\caption{Метод Зейделя сходится быстро}
+\end{figure}
+
+
+\begin{figure}[]
+	\centering
+	\includegraphics[width=\textwidth]{jacobi.png}
+	\caption{Метод Якоби расходится быстро}
+\end{figure}
+
+
+\begin{figure}[]
+	\centering
+	\includegraphics[width=\textwidth]{mpi.png}
+	\caption{
+Метод ПИ Сходится достаточно медленно, при условии, что выбран оптимальный параметр $tau = \frac{2}{\lambda_max + \lambda_min}$}
+\end{figure}
+
+
+\end{document}
