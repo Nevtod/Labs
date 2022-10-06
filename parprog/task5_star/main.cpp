@@ -8,6 +8,7 @@ using std::endl;
 
 // In this program we calculates arcsin(x) series
 
+//recurrent formula for computing next series term using current one in arcsin series 
 double getNextTerm (double m, double curTerm, double x)
 {
     return curTerm * x * x * m * m / ((m + 1) * (m + 2));
@@ -28,21 +29,25 @@ int main (int argc, char* argv[])
         double curSum = 0;
         if (rank + 1 < N)   // check that we have more iterations than thread's number
         {
+            //evenly split series terms
             int blockSize = N / NT;
             int remainder = N % NT;
             int begin = blockSize * rank + ((rank < remainder) ? rank : remainder);
             int end = begin + blockSize - (rank >= remainder ? 1 : 0);
             
+            // compute first term in block of current thread
             double curTerm = x;
             for (int i = 1; i <= begin; i++)
                 curTerm = getNextTerm(2 * (i - 1) + 1, curTerm, x);
 
+            // compute other terms and sum them all
             for (int i = begin; i <= end; i++)
             {
                 curSum += curTerm;
                 curTerm = getNextTerm(2 * i + 1, curTerm, x);
             }
 
+            // sum over threads
             #pragma omp critical (sum)
             {
                 sum += curSum;

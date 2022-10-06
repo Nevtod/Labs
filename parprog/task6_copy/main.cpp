@@ -19,50 +19,27 @@ int main (int argc, char* argv[])
 {
     double start = omp_get_wtime();
     long long N = atoll (argv[1]); // number of series' members
-    int NT = omp_get_max_threads();  //number of threads
     
     for (int i = 0; i < SIZE; i++)
         prime[i] = true;
 
     prime[0] = false;
     long long lastCheckedDivider = 1;
-    long long minStart;
-    long long curN;
-    #pragma omp parallel
+    #pragma omp parallel //shared(lastCheckedDivider, minStart) 
     {
         while (lastCheckedDivider < N)
         {
-            int rank = omp_get_thread_num();
-
-            //Here we fix divider for all threads
             #pragma omp single
             {
                 do lastCheckedDivider++;
                 while (lastCheckedDivider < N && !prime[lastCheckedDivider]);
-                minStart = lastCheckedDivider * lastCheckedDivider;
-                curN = N - minStart + 1;
             }
             
-            if (curN > 0)
-            {
-                //split all natural numbers lower N on NT blocks 
-                long long blockSize = curN / NT;
-                long long remainder = curN % NT;
-                long long begin = blockSize * rank + ((rank < remainder) ? rank : remainder);
-                long long end = begin + blockSize - (rank >= remainder ? 1 : 0);
-                begin += minStart;  //Take into account that beginning is shifted
-                end += minStart;
-                //we have to align beginnings of groups by zero remainder of division by current divider
-                begin = begin + (lastCheckedDivider - begin % lastCheckedDivider) % lastCheckedDivider;
+             #pragma omp for
+             for (long long k = lastCheckedDivider * lastCheckedDivider; k <= N; k += lastCheckedDivider) 
+                prime[k] = false;
 
-                // main algorithm body
-                for (long long k = begin; k <= end; k += lastCheckedDivider)
-                    prime[k] = false;
-
-                #pragma omp barrier
-            }
-            else
-                break;
+            #pragma omp barrier
         }
     }
     double elapsedSeconds = omp_get_wtime() - start;

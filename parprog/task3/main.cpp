@@ -6,6 +6,7 @@ using std::cout;
 using std::endl;
 using std::vector;
 
+// this function averages given values
 long long get_window_value (int previous, int current, int next)
 {
     return previous * current * next / 3;
@@ -31,7 +32,7 @@ int main (int argc, char* argv[])
             int prev = (i == 0) ? 0 : a.at (i - 1);
             int next = (i == N - 1) ? 0 : a.at (i + 1);
 
-            b.at (i) = get_window_value (prev, a.at (i), next);
+            b.at (i) = get_window_value (prev, a.at (i), next); //average it now
         }
     }
 

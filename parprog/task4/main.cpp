@@ -25,7 +25,6 @@ int main (int argc, char* argv[])
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> distribution (1, 3);
-    // int val = distribution (rng);
 
     // Dimensions of matrix. First is N x M, second is M x P 
     
@@ -40,7 +39,7 @@ int main (int argc, char* argv[])
         for (auto& val : A.at (i))
             val = distribution (rng);
 
-        C.at (i).resize (P, 0);
+        C.at (i).resize (P, 0);                 // initialization...
     }
     
     for (int i = 0; i < M; i++)
@@ -49,23 +48,19 @@ int main (int argc, char* argv[])
         for (auto& val : B.at (i))
             val = distribution (rng);
     }
-    
+        // here we compute multiplication of matrix
     #pragma omp parallel
     {
         #pragma omp for schedule (static)
         for (int i = 0; i < N; i++)
         {
-            // #pragma omp for schedule (static) 
             for (int j = 0; j < P; j++)
             {
-                // #pragma omp for schedule (static) reduction(+:C)
                 for (int k = 0; k < M; k++)
                 {
                     C[i][j] += A[i][k] * B[k][j];
                 }
             }
-            // #pragma omp for schedule (static)
-            // for (int j = 0; j < P;)
         }
     }
 

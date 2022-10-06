@@ -7,9 +7,9 @@ using std::endl;
 
 int main (int argc, char* argv[])
 {
-    double x = 1; // the power to which we raise
+    double x = 1; // the power to which we raise exp
 
-    int N = atoi (argv[1]); // number of series' members
+    int N = atoi (argv[1]); // number of series' members for command line
     double sum = 0;
     int NT = omp_get_max_threads();  //number of threads
 
@@ -19,6 +19,7 @@ int main (int argc, char* argv[])
         double curSum = 0;
         if (rank + 1 < N)   // check that we have more iterations than thread's number
         {
+            // split iterations evenly into threads
             int blockSize = N / NT;
             int remainder = N % NT;
             int begin = blockSize * rank + ((rank < remainder) ? rank : remainder);
@@ -26,14 +27,15 @@ int main (int argc, char* argv[])
             
             double curTerm = 1;
             for (int i = 1; i <= begin; i++)
-                curTerm *= x / (double) i;
+                curTerm *= x / (double) i;      //compute first series' term for current thread 
 
-            for (int i = begin; i <= end; i++)
+            for (int i = begin; i <= end; i++)  // compute sum on current thread
             {
                 curSum += curTerm;
                 curTerm *= x / (double) (i + 1);
             }
 
+            // final sum over all threads
             #pragma omp critical (sum)
             {
                 sum += curSum;
