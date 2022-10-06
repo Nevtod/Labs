@@ -48,7 +48,7 @@ def get_MZ (matrix, f, iterCnt):
 
 eigenValuesFilename = "eigenValues15.dat"
 #Вход задачи
-N = 101  # число точек
+N = 15  # число точек
 h = 1 / (N - 1)
 matrix = np.zeros (((N - 2) * (N - 2), N * N))
 
@@ -141,7 +141,8 @@ ax.zaxis.set_major_locator(LinearLocator(10))
 # ax.zaxis.set_major_formatter('{x:.02f}')
 # Add a color bar which maps values to colors.
 fig.colorbar(surf, shrink=0.5, aspect=5)
-plt.show()
+plt.savefig("pic.png")
+# plt.show()
 
 
 
