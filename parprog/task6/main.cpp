@@ -67,12 +67,13 @@ int main (int argc, char* argv[])
     }
     double elapsedSeconds = omp_get_wtime() - start;
 
+    unsigned long cnt = 0;
     cout << "ElapsedTime = " << elapsedSeconds * 1000 << "[ms]" << endl;
-    cout << "All prime numbers lower " << N << ": " << endl;
-    // for (long long i = 1; i <= N; i++)
-    //     if (prime[i])
-    //     {
-    //         cout << i << " ";
-    //     }
+    for (long long i = 1; i <= N; i++)
+        if (prime[i])
+        {
+            cnt++;
+        }
+    cout << cnt << " prime numbers up to " << N << " in total " << endl;
     // return 0;
 }
