@@ -6,8 +6,8 @@ rm -f $file
 make build
 echo $'NP\tTime\tRan' > $file    # N - количество точек вдоль одной оси
 
-for NP in $(seq 1 6); do  
-for run in $(seq 1 1 8); do 
+for NP in $(seq 1 50); do  
+for run in $(seq 1 1 4); do 
 # for run in $(seq 1 8); do   # усредняем по нескольким точкам
     # echo "$run " >> $file
     OMP_NUM_THREADS=$NP ./main $run >> $file
