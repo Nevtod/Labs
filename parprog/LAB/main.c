@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define ISIZE 10000
-#define JSIZE 10000
+#define ISIZE 1000
+#define JSIZE 1000
 
 
 /**
