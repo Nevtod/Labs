@@ -6,8 +6,6 @@
 #define ISIZE 10000
 #define JSIZE 10000
 
-double a[ISIZE][JSIZE];
-double start = 0, finish = 0;
 
 /**
  * @brief return a begin index of the current block  [begin index, end index]
@@ -44,50 +42,64 @@ int get_block_end(int nBlocks, int N, int curBlockIndex)
     return endIndex;
 }
 
+
+double a[ISIZE][JSIZE];
 int main(int argc, char *argv[])
 {
+    // каждый поток хранит свою копию исходного массива
     for (int i = 0; i < ISIZE; i++)
     {
         for (int j = 0; j < JSIZE; j++)
-        {
+        {   
             a[i][j] = 10 * i + j;
         }
     }
-
     int ran = atoi(argv[1]); 
+
     int rank, NP;    // NP - количество процессов, rank - номер текущего
     MPI_Init(&argc, &argv);     
     MPI_Comm_size(MPI_COMM_WORLD, &NP);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);    
     MPI_Barrier(MPI_COMM_WORLD);
-    double beginTime = MPI_Wtime();
+
     
+    double beginTime = MPI_Wtime();
     int begin = get_block_begin(NP, JSIZE - 7, rank);
     int end = get_block_end(NP, JSIZE - 7, rank);
     
-    
+    // просто распараллеливаем внешний цикл, разбиваем его на блоки
     for (int i = 1; i < ISIZE - 1; i++)
     {
         for (int j = begin + 6; j <= end + 6; j++)
         {
             a[i][j] = sin(0.00001 * a[i + 1][j - 6]);
         }
-
-        MPI_Barrier(MPI_COMM_WORLD);
+        // нам даже не нужна барьерная синхронизация
     }
-    double finishTime = MPI_Wtime();
     
-    FILE *ff;
-    ff = fopen("result.txt", "w");
-    // ff = fopen("result.txt","w");
-    for(int i = 0; i < ISIZE; i++)
-    {
-        for (int j = 0; j < JSIZE; j++)
-        {
-            fprintf(ff, "%f ", a[i][j]);
-        }
-        fprintf(ff, "\n");
-    }
-    fclose(ff);    
-    printf("%f\t%d\n", finishTime - beginTime, ran);
+    // Если потребуется вывод подсчитанных значений
+    // if (rank == 5)
+    // {
+    //     FILE *ff;
+    //     ff = fopen("result.txt", "w");
+    //     // ff = fopen("result.txt","w");
+    //     for(int i = 0; i < ISIZE - 1; i++)
+    //     {
+    //         for (int j = 6 + begin; j < end + 6; j++)
+    //         {
+    //             fprintf(ff, "%f ", a[i][j]);
+    //         }
+    //         fprintf(ff, "\n");
+    //     }
+    //     fclose(ff);    
+    // }
+    
+    MPI_Barrier(MPI_COMM_WORLD);
+    double finishTime = MPI_Wtime();
+    if (rank == 0)
+        printf("%d\t%f\t%d\n", NP, finishTime - beginTime, ran); 
+        // выводим количество рабочих процессоров и время работы
+
+    MPI_Finalize();
+    return 0;
 }
