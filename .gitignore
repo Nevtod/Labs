@@ -8,6 +8,7 @@
 *.jpeg
 *.identifier
 *.pyc
+*.txt
 DSP/Lab2/dataset/cello1.wav
 DSP/Lab2/dataset/cello2.wav
 DSP/Lab2/dataset/cello2.wav:Zone.Identifier
